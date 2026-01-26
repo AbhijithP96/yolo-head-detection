@@ -1,0 +1,73 @@
+schema: '2.0'
+stages:
+  data_collection:
+    cmd: python yolo_head_detection/dataset.py collect --url 
+      https://www.di.ens.fr/willow/research/headdetection/release/HollywoodHeads.zip
+    deps:
+    - path: yolo_head_detection/data_utils/data_collection.py
+      hash: md5
+      md5: 494f047bfe695f18273a7e45ef61fc65
+      size: 7923
+    - path: yolo_head_detection/dataset.py
+      hash: md5
+      md5: 156c65f0d687319d4dfacfd3fa1ccb68
+      size: 1030
+    params:
+      params.yaml:
+        url: 
+          https://www.di.ens.fr/willow/research/headdetection/release/HollywoodHeads.zip
+    outs:
+    - path: data/raw/HollywoodHeads
+      hash: md5
+      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
+      size: 5802977531
+      nfiles: 449490
+  data_validation:
+    cmd: python yolo_head_detection/dataset.py validate
+    deps:
+    - path: data/raw/HollywoodHeads
+      hash: md5
+      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
+      size: 5802977531
+      nfiles: 449490
+    - path: yolo_head_detection/data_utils/data_validation.py
+      hash: md5
+      md5: f48b785d9552cfc80e9dfddba2c79751
+      size: 4782
+    - path: yolo_head_detection/dataset.py
+      hash: md5
+      md5: 156c65f0d687319d4dfacfd3fa1ccb68
+      size: 1030
+    outs:
+    - path: data/interim
+      hash: md5
+      md5: 08e5dee3662663711281781020486889.dir
+      size: 3299655
+      nfiles: 3
+  voc2yolo:
+    cmd: python yolo_head_detection/dataset.py convert
+    deps:
+    - path: data/interim
+      hash: md5
+      md5: 08e5dee3662663711281781020486889.dir
+      size: 3299655
+      nfiles: 3
+    - path: data/raw/HollywoodHeads
+      hash: md5
+      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
+      size: 5802977531
+      nfiles: 449490
+    - path: yolo_head_detection/data_utils/voc2yolo.py
+      hash: md5
+      md5: 9620cfd9e8aecfa1465eadd13d704a03
+      size: 5014
+    - path: yolo_head_detection/dataset.py
+      hash: md5
+      md5: 156c65f0d687319d4dfacfd3fa1ccb68
+      size: 1030
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 09b32442a6e71258f29b427c349377a1.dir
+      size: 5534818467
+      nfiles: 439955

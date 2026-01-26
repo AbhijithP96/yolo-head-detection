@@ -1,0 +1,27 @@
+stages:
+  data_collection:
+    cmd: python yolo_head_detection/dataset.py collect --url ${url}
+    params:
+    - url
+    deps:
+    - yolo_head_detection/dataset.py
+    - yolo_head_detection/data_utils/data_collection.py
+    outs:
+    - data/raw/HollywoodHeads
+  data_validation:
+    cmd: python yolo_head_detection/dataset.py validate
+    deps:
+    - yolo_head_detection/data_utils/data_validation.py
+    - yolo_head_detection/dataset.py
+    - data/raw/HollywoodHeads
+    outs:
+    - data/interim
+  voc2yolo:
+    cmd: python yolo_head_detection/dataset.py convert
+    deps:
+    - yolo_head_detection/data_utils/voc2yolo.py
+    - yolo_head_detection/dataset.py
+    - data/raw/HollywoodHeads
+    - data/interim
+    outs:
+    - data/processed
