@@ -1,12 +1,12 @@
 url: "https://www.di.ens.fr/willow/research/headdetection/release/HollywoodHeads.zip"
 
 training:
-  exp: "head-detect-trial"
-  run: "yolo8n-train-trial"
+  exp: "head-detect-train"
+  run: "yolo8n-train"
   model: "yolov8n.pt"
   batch: 10
-  epochs: 40
-  patience: 5
+  epochs: 20
+  patience: 3
   optimizer: 'SGD'
   lr0: 0.0001
   scale: 0.7
