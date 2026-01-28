@@ -1,4 +1,4 @@
 [core]
     remote = local
 ['remote "local"']
-    url = /tmp/dvc
+    url = /media/basilisk/New Volume2/dvc

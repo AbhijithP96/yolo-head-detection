@@ -25,3 +25,11 @@ stages:
     - data/interim
     outs:
     - data/processed
+  train:
+    cmd: python yolo_head_detection/modeling/train.py
+    deps:
+    - yolo_head_detection/modeling/train.py
+    - yolo_head_detection/config.py
+    - data/processed
+    outs:
+    - reports/run_info.json
