@@ -1,7 +1,8 @@
-loguru
-pip
-python-dotenv
-ruff
-tqdm
 typer
--e .
+loguru
+python-dotenv
+tqdm
+opencv-python
+ultralytics
+dagshub
+mlflow

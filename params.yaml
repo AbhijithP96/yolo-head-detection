@@ -1,8 +1,8 @@
 url: "https://www.di.ens.fr/willow/research/headdetection/release/HollywoodHeads.zip"
 
 training:
-  exp: "head-detect-train"
-  run: "yolo8n-train"
+  exp: "model-training-final"
+  run: "yolov8n-head-detect"
   model: "yolov8n.pt"
   batch: 10
   epochs: 20

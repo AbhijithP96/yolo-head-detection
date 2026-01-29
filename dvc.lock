@@ -71,3 +71,24 @@ stages:
       md5: 09b32442a6e71258f29b427c349377a1.dir
       size: 5534818467
       nfiles: 439955
+  train:
+    cmd: python yolo_head_detection/modeling/train.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: ea9f2c6cf82847d6e329707d5f48d4ac.dir
+      size: 5541018474
+      nfiles: 439957
+    - path: yolo_head_detection/config.py
+      hash: md5
+      md5: d68aca44a4fb60070bcd002a0f28c9fe
+      size: 4085
+    - path: yolo_head_detection/modeling/train.py
+      hash: md5
+      md5: 007efbf4521d9b9eefba625846b0037a
+      size: 5210
+    outs:
+    - path: reports/run_info.json
+      hash: md5
+      md5: 2a906c4b35ee2ef479f1e7c10a26cdc8
+      size: 156

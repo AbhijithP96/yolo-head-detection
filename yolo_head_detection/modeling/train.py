@@ -47,9 +47,16 @@ class YoloMlFlowModel(mlflow.pyfunc.PythonModel):
         model_input = [img for img in model_input]
         results = self.model(model_input)
         # Collect boxes for all results
-        outputs = [r.boxes.xywh.cpu().numpy() for r in results]
+        outputs = [r.boxes.xywh.cpu().numpy() for r in results if r.boxes is not None]
         return outputs
     
+    def get_raw_model(self):
+        """Get the underlying YOLO model.
+        
+        Returns:
+            The YOLO model instance.
+        """
+        return self.model
 
 @app.command()
 def main():
@@ -108,24 +115,26 @@ def main():
             model_input = np.array(Image.open(REPORTS_DIR / 'figures' / 'mov_019_022253.jpeg').convert('RGB').resize((640,640)))
             
             batch_input = np.expand_dims(model_input, axis=0)  # shape: (1, H, W, C)
-            batch_output = [r.boxes.xywh.cpu().numpy() for r in final_model([img for img in batch_input])]
+            batch_output = [r.boxes.xywh.cpu().numpy() for r in final_model([img for img in batch_input]) if r.boxes is not None]
             
             model_signature = mlflow.models.infer_signature(
                 model_input=batch_input,
                 model_output=batch_output)
             
-            mlflow.pyfunc.log_model(
-                name='best-model',
+            model_info = mlflow.pyfunc.log_model(
+                name='yolo_head_detection',
                 python_model=YoloMlFlowModel(),
                 artifacts={"yolo_model": str(weights_path)},
                 signature=model_signature,
                 input_example=batch_input
             )
+            
         logger.info('Training Completed.')
         # save the run info to a json file
         run_info = {
             'run_id' : run.info.run_id,
-            'model_name' : 'best-model'
+            'model_name' : 'yolo_head_detection',
+            'model_uri' : model_info.model_uri,
         }
         logger.info('Saving run info to reports/run_info.json')
         reports_path = REPORTS_DIR / 'run_info.json'
