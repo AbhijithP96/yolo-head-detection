@@ -6,12 +6,12 @@ stages:
     deps:
     - path: yolo_head_detection/data_utils/data_collection.py
       hash: md5
-      md5: 494f047bfe695f18273a7e45ef61fc65
-      size: 7923
+      md5: bc83a855f590236a4398e8404baf5021
+      size: 8174
     - path: yolo_head_detection/dataset.py
       hash: md5
-      md5: 156c65f0d687319d4dfacfd3fa1ccb68
-      size: 1030
+      md5: 7ca5b81e4872e67e6446dc0c7a733f9d
+      size: 1079
     params:
       params.yaml:
         url: 
@@ -19,76 +19,5 @@ stages:
     outs:
     - path: data/raw/HollywoodHeads
       hash: md5
-      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
-      size: 5802977531
-      nfiles: 449490
-  data_validation:
-    cmd: python yolo_head_detection/dataset.py validate
-    deps:
-    - path: data/raw/HollywoodHeads
-      hash: md5
-      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
-      size: 5802977531
-      nfiles: 449490
-    - path: yolo_head_detection/data_utils/data_validation.py
-      hash: md5
-      md5: f48b785d9552cfc80e9dfddba2c79751
-      size: 4782
-    - path: yolo_head_detection/dataset.py
-      hash: md5
-      md5: 156c65f0d687319d4dfacfd3fa1ccb68
-      size: 1030
-    outs:
-    - path: data/interim
-      hash: md5
-      md5: 08e5dee3662663711281781020486889.dir
-      size: 3299655
-      nfiles: 3
-  voc2yolo:
-    cmd: python yolo_head_detection/dataset.py convert
-    deps:
-    - path: data/interim
-      hash: md5
-      md5: 08e5dee3662663711281781020486889.dir
-      size: 3299655
-      nfiles: 3
-    - path: data/raw/HollywoodHeads
-      hash: md5
-      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
-      size: 5802977531
-      nfiles: 449490
-    - path: yolo_head_detection/data_utils/voc2yolo.py
-      hash: md5
-      md5: 9620cfd9e8aecfa1465eadd13d704a03
-      size: 5014
-    - path: yolo_head_detection/dataset.py
-      hash: md5
-      md5: 156c65f0d687319d4dfacfd3fa1ccb68
-      size: 1030
-    outs:
-    - path: data/processed
-      hash: md5
-      md5: 09b32442a6e71258f29b427c349377a1.dir
-      size: 5534818467
-      nfiles: 439955
-  train:
-    cmd: python yolo_head_detection/modeling/train.py
-    deps:
-    - path: data/processed
-      hash: md5
-      md5: ea9f2c6cf82847d6e329707d5f48d4ac.dir
-      size: 5541018474
-      nfiles: 439957
-    - path: yolo_head_detection/config.py
-      hash: md5
-      md5: d68aca44a4fb60070bcd002a0f28c9fe
-      size: 4085
-    - path: yolo_head_detection/modeling/train.py
-      hash: md5
-      md5: 007efbf4521d9b9eefba625846b0037a
-      size: 5210
-    outs:
-    - path: reports/run_info.json
-      hash: md5
-      md5: 2a906c4b35ee2ef479f1e7c10a26cdc8
-      size: 156
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
