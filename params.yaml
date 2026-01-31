@@ -1,8 +1,9 @@
 url: "https://www.di.ens.fr/willow/research/headdetection/release/HollywoodHeads.zip"
+tracking_uri: "https://dagshub.com/AbhijithP96/yolo-head-detection.mlflow"
 
 training:
-  exp: "model-training-final"
-  run: "yolov8n-head-detect"
+  exp: "model-training-win"
+  run: "yolov8n-head-detection"
   model: "yolov8n.pt"
   batch: 10
   epochs: 20

@@ -43,6 +43,7 @@ def main(url: str = URL):
     """
     collect(url)
     validate()
+    convert()
 
 
 if __name__ == "__main__":

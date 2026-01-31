@@ -47,7 +47,7 @@ class YoloMlFlowModel(mlflow.pyfunc.PythonModel):
         model_input = [img for img in model_input]
         results = self.model(model_input)
         # Collect boxes for all results
-        outputs = [r.boxes.xywh.cpu().numpy() for r in results if r.boxes is not None]
+        outputs = [(r.boxes.xyxy.cpu().numpy(), r.probs.cpu().numpy()) for r in results if r.boxes is not None]
         return outputs
     
     def get_raw_model(self):
@@ -105,7 +105,8 @@ def main():
                 cutmix=TRAINER.cutmix,
                 optimizer=TRAINER.optimizer,
                 lr0=TRAINER.lr0,
-                fraction=1.0
+                fraction=1.0,
+                workers = 4
             )
             
             
@@ -115,7 +116,7 @@ def main():
             model_input = np.array(Image.open(REPORTS_DIR / 'figures' / 'mov_019_022253.jpeg').convert('RGB').resize((640,640)))
             
             batch_input = np.expand_dims(model_input, axis=0)  # shape: (1, H, W, C)
-            batch_output = [r.boxes.xywh.cpu().numpy() for r in final_model([img for img in batch_input]) if r.boxes is not None]
+            batch_output = [(r.boxes.xyxy.cpu().numpy(), r.probs.cpu().numpy()) for r in final_model([img for img in batch_input]) if r.boxes is not None]
             
             model_signature = mlflow.models.infer_signature(
                 model_input=batch_input,

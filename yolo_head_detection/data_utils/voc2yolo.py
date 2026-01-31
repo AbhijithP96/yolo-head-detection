@@ -71,6 +71,7 @@ def _create_yaml_file(out_dir: Path) -> None:
         'path' : str(out_dir),
         'train' : 'images/train',
         'val': 'images/val',
+        'test': 'images/test',
         'names' : {
             0 : 'head'
         }

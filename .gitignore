@@ -205,3 +205,5 @@ reports/run_SGD_0.0001
 reports/yolo8n-train-trial
 reports/yolo8n-log-check
 reports/yolo8n-log-check-2
+reports/yolov8n-head-detection
+reports/test
