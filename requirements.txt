@@ -8,3 +8,6 @@ dagshub
 mlflow
 pytest
 dvc
+fastapi
+uvicorn
+python-multipart

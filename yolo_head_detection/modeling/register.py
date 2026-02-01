@@ -45,9 +45,7 @@ def main():
         # Initialize DagsHub integration with MLflow for remote tracking
         logger.info("Setting up MLFlow Tracking on Dagshub")
         if repo_owner and repo_name:
-            dagshub.init(
-                repo_owner=repo_owner, repo_name=repo_name, mlflow=True
-            )
+            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
         mlflow.set_tracking_uri(TRACKING_URI)
 
         # Load the training run metadata containing model URI and other run information

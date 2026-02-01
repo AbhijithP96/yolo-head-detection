@@ -4,7 +4,11 @@ from PIL import Image
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-from yolo_head_detection.data_utils.data_validation import _check_image_file, _to_discard_data
+from yolo_head_detection.data_utils.data_validation import (
+    _check_image_file,
+    _to_discard_data,
+)
+
 
 ##-------------------------------------------------------------
 # Helper Functions for Tests
@@ -13,6 +17,7 @@ def create_image(path: Path, size=(100, 100), color=(255, 0, 0)):
     """Helper to create a real image file."""
     img = Image.new("RGB", size, color)
     img.save(path)
+
 
 def create_xml(path: Path, filename: str, width=100, height=100, depth=3, boxes=None):
     """
@@ -29,7 +34,7 @@ def create_xml(path: Path, filename: str, width=100, height=100, depth=3, boxes=
     ET.SubElement(size, "depth").text = str(depth)
 
     obj = ET.SubElement(annotation, "object")
-    for (xmin, ymin, xmax, ymax) in boxes:
+    for xmin, ymin, xmax, ymax in boxes:
         bndbox = ET.SubElement(obj, "bndbox")
         ET.SubElement(bndbox, "xmin").text = str(xmin)
         ET.SubElement(bndbox, "ymin").text = str(ymin)
@@ -45,6 +50,7 @@ def setup_dataset(tmp_path):
     (data_path / "Annotations").mkdir()
     (data_path / "JPEGImages").mkdir()
     return data_path
+
 
 ##-------------------------------------------------------------
 # Tests for check_image_file function in data_validation.py
@@ -89,19 +95,17 @@ def test_valid_image_different_format(tmp_path):
 
     assert _check_image_file(img_path, (128, 128)) is True
 
+
 ##-------------------------------------------------------------
 # Tests for _to_discard_data function in data_validation.py
 ##-------------------------------------------------------------
+
 
 def test_valid_sample_kept(tmp_path):
     """Valid image + valid bbox should NOT be discarded."""
     data_path = setup_dataset(tmp_path)
     create_image(data_path / "JPEGImages" / "img1.jpeg", (100, 100))
-    create_xml(
-        data_path / "Annotations" / "img1.xml",
-        "img1",
-        boxes=[(10, 10, 50, 50)]
-    )
+    create_xml(data_path / "Annotations" / "img1.xml", "img1", boxes=[(10, 10, 50, 50)])
 
     assert _to_discard_data("img1", data_path) is False
 
@@ -122,7 +126,7 @@ def test_discard_if_wrong_depth(tmp_path):
         data_path / "Annotations" / "img1.xml",
         "img1",
         depth=1,
-        boxes=[(10, 10, 50, 50)]
+        boxes=[(10, 10, 50, 50)],
     )
 
     assert _to_discard_data("img1", data_path) is True
@@ -137,7 +141,7 @@ def test_discard_if_size_mismatch(tmp_path):
         "img1",
         width=100,
         height=100,
-        boxes=[(10, 10, 50, 50)]
+        boxes=[(10, 10, 50, 50)],
     )
 
     assert _to_discard_data("img1", data_path) is True
@@ -150,7 +154,7 @@ def test_discard_if_bbox_out_of_bounds(tmp_path):
     create_xml(
         data_path / "Annotations" / "img1.xml",
         "img1",
-        boxes=[(10, 10, 150, 50)]  # xmax > width
+        boxes=[(10, 10, 150, 50)],  # xmax > width
     )
 
     assert _to_discard_data("img1", data_path) is True
@@ -163,7 +167,7 @@ def test_discard_if_bbox_too_small(tmp_path):
     create_xml(
         data_path / "Annotations" / "img1.xml",
         "img1",
-        boxes=[(10, 10, 15, 15)]  # 5x5 < MIN_W/H=10
+        boxes=[(10, 10, 15, 15)],  # 5x5 < MIN_W/H=10
     )
 
     assert _to_discard_data("img1", data_path) is True

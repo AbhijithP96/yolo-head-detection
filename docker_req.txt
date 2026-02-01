@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-multipart
+dagshub
+mlflow
+Pillow
+loguru
+python-dotenv
+opencv-python
+numpy==2.4.1
+pydot==4.0.1
+tqdm==4.67.1
+ultralytics==8.4.8
