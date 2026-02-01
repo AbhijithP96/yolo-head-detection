@@ -20,7 +20,7 @@ root_path = Path(__file__).resolve().parents[2]  # Navigate up 2 levels to proje
 sys.path.append(str(root_path))
 
 from ultralytics import YOLO, settings
-from yolo_head_detection.config import TRACKING_URI, PROCESSED_DATA_DIR, REPORTS_DIR
+from yolo_head_detection.config import TRACKING_URI, PROCESSED_DATA_DIR, REPORTS_DIR, repo_owner, repo_name
 
 # Initialize Typer CLI application
 app = Typer()
@@ -45,9 +45,10 @@ def main():
     try:
         # Initialize DagsHub and MLflow tracking for remote experiment management
         logger.info("Setting up MLflow tracking on DagsHub")
-        dagshub.init(
-            repo_owner="AbhijithP96", repo_name="yolo-head-detection", mlflow=True
-        )
+        if repo_owner and repo_name:
+            dagshub.init(
+                repo_owner=repo_owner, repo_name=repo_name, mlflow=True
+            )
         mlflow.set_tracking_uri(TRACKING_URI)
         mlflow.set_experiment(experiment_name="eval_test_set")
         logger.info("MLflow experiment set to eval_test_set")
@@ -81,6 +82,7 @@ def main():
                 device=0,
                 imgsz=640,
                 batch=8,
+                exist_ok=True,
             )
 
             # Extract and log all evaluation metrics to MLflow for tracking

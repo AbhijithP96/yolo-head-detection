@@ -21,6 +21,8 @@ from yolo_head_detection.config import (
     TRAINER,
     TRACKING_URI,
     REPORTS_DIR,
+    repo_owner,
+    repo_name,
 )
 
 app = typer.Typer()
@@ -86,9 +88,10 @@ def main():
     try:
 
         logger.info("Setting up MLFlow Tracking on Dagshub")
-        dagshub.init(
-            repo_owner="AbhijithP96", repo_name="yolo-head-detection", mlflow=True
-        )
+        if repo_owner and repo_name:
+            dagshub.init(
+                repo_owner=repo_owner, repo_name=repo_name, mlflow=True
+            )
         mlflow.set_tracking_uri(TRACKING_URI)
         mlflow.set_experiment(TRAINER.exp)
 
