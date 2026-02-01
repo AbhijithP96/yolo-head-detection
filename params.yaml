@@ -1,5 +1,6 @@
 url: "https://www.di.ens.fr/willow/research/headdetection/release/HollywoodHeads.zip"
-tracking_uri: "https://dagshub.com/AbhijithP96/yolo-head-detection.mlflow"
+repo_owner: "AbhijithP96"
+repo_name: "yolo-head-detection"
 
 training:
   exp: "model-training-win"

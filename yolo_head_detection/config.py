@@ -11,6 +11,10 @@ import yaml
 from dotenv import load_dotenv
 from loguru import logger
 
+import dagshub
+from dagshub.auth import add_app_token,clear_token_cache
+
+clear_token_cache()
 # Load environment variables from .env file if it exists
 load_dotenv()
 
@@ -25,11 +29,39 @@ with open(params_path, "r") as f:
 # Load download URL and MLFlow tracking URI from environment variables or params.yaml
 try:
     URL = os.environ["URL"]
-    TRACKING_URI = os.environ["TRACKING_URI"]
 except KeyError:
     # Fallback to params.yaml if environment variables are not set
     URL = params.get("url", "")
-    TRACKING_URI = params.get("tracking_uri", "http://localhost:5000")
+    
+# Setup DagsHub repository information for MLFlow tracking
+# check if dagshub access token is set in environment variables
+
+try:
+    DAGSHUB_ACCESS_TOKEN = os.environ["DAGSHUB_ACCESS_TOKEN"]
+
+    try:
+        add_app_token(DAGSHUB_ACCESS_TOKEN)
+    except Exception:
+        logger.error("DAGSHUB_ACCESS_TOKEN is not set or invalid.")
+except KeyError:
+    logger.warning("DAGSHUB_ACCESS_TOKEN is not set. Only for local tracking. Not reproducible in CI/CD.")
+    logger.warning("Will use browser authentication if required.")
+
+
+repo_owner = params.get("repo_owner", None)
+repo_name = params.get("repo_name", None)
+if repo_owner and repo_name:
+    try:
+        dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
+        TRACKING_URI = f"https://dagshub.com/{repo_owner}/{repo_name}.mlflow"
+        logger.info(f"Logging to DagsHub MLFlow tracking server at {TRACKING_URI}.")
+    except Exception as e:
+        logger.error(f"Failed to initialize DagsHub: {e}")
+        logger.warning("Logging to local MLFlow tracking server.")
+        TRACKING_URI = "http://localhost:5000"
+else:
+    logger.info("Logging to local MLFlow tracking server.")
+    TRACKING_URI = "http://localhost:5000"
 
 logger.info(f"Download URL: {URL}")
 
