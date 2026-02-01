@@ -1,8 +1,21 @@
+"""Dataset validation helpers for HollywoodHeads.
+
+This module validates the downloaded dataset by checking image files and
+their XML annotations for basic integrity (image readable, correct depth,
+bounding box validity), and writes filtered split files to an interim
+directory.
+
+Primary functions:
+- `validate_data`: read splits, ensure no overlaps, and write filtered lists
+- `_to_discard_data`: run per-sample checks and return whether to discard
+"""
+
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from PIL import Image
 from tqdm import tqdm
 from loguru import logger
+
 
 def _check_image_file(image_path: Path, size: tuple) -> bool:
     """
@@ -19,23 +32,28 @@ def _check_image_file(image_path: Path, size: tuple) -> bool:
         bool: True if the image is valid and matches the size, False otherwise.
     """
     try:
-
+        # First verify and load to catch corrupted images early
         with Image.open(image_path) as img:
             img.verify()
 
+        # Re-open to load pixel data
         with Image.open(image_path) as img:
             img.load()
 
+        # Check reported size matches actual image dimensions
         with Image.open(image_path) as img:
             w_img, h_img = img.size
 
-            if w_img != size[0] and h_img != size[1]:
-                raise Exception
+            # Use OR: if either width or height mismatches, treat as invalid
+            if w_img != size[0] or h_img != size[1]:
+                raise Exception("Image size mismatch")
 
         return True
 
-    except:
+    except Exception:
+        # Any failure reading or validating the image results in rejection
         return False
+
 
 def _to_discard_data(filename: str, data_path: Path) -> bool:
     """
@@ -54,32 +72,36 @@ def _to_discard_data(filename: str, data_path: Path) -> bool:
     MIN_W, MIN_H = 10, 10
 
     try:
-
-        xml_path = data_path / 'Annotations' / f'{filename}.xml'
+        # Parse annotation XML to extract image metadata and objects
+        xml_path = data_path / "Annotations" / f"{filename}.xml"
 
         tree = ET.parse(xml_path)
         root = tree.getroot()
 
-        image_path = data_path / 'JPEGImages' / root.findtext("filename")
+        # Determine image path from XML `filename` element
+        image_path = data_path / "JPEGImages" / root.findtext("filename")
 
+        # Read declared image dimensions and channel depth
         size = root.find("size")
         width = int(size.findtext("width"))
         height = int(size.findtext("height"))
-        depth = int(size.findtext('depth'))
+        depth = int(size.findtext("depth"))
 
+        # Require 3 channels (RGB)
         if depth != 3:
             return True
 
+        # Verify the image file is readable and matches declared size
         if not _check_image_file(image_path, (width, height)):
             return True
 
         objects = root.findall("object")
 
-        #if len(objects) == 0:
+        # if len(objects) == 0:
         #    return True
-        
+
         for obj in objects:
-            bndbox = obj.find('bndbox')
+            bndbox = obj.find("bndbox")
 
             xmin = int(bndbox.findtext("xmin"))
             ymin = int(bndbox.findtext("ymin"))
@@ -88,12 +110,12 @@ def _to_discard_data(filename: str, data_path: Path) -> bool:
 
             if not (0 <= xmin < xmax <= width and 0 <= ymin < ymax <= height):
                 return True
-            
-            if xmax-xmin < MIN_W or ymax-ymin < MIN_H:
+
+            if xmax - xmin < MIN_W or ymax - ymin < MIN_H:
                 return True
-                
+
         return False
-    
+
     except Exception:
         return True
 
@@ -113,30 +135,31 @@ def validate_data(raw_data_dir: Path, interim_data_dir: Path) -> None:
     Returns:
         None
     """
-    logger.info('Validating Dataset')
+    logger.info("Validating Dataset")
 
-    data_path = raw_data_dir / 'HollywoodHeads'
-    split_dir = data_path / 'Splits'
+    data_path = raw_data_dir / "HollywoodHeads"
+    split_dir = data_path / "Splits"
 
-    #logger.info('Creating Output directory')
+    # Ensure the interim output directory exists for filtered splits
     out_dir = interim_data_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.info('Checking Train/val/test overlap')
+    # Ensure the provided splits do not overlap (basic sanity check)
+    logger.info("Checking Train/Val/Test overlap")
     train = set((split_dir / "train.txt").read_text().splitlines())
-    val   = set((split_dir / "val.txt").read_text().splitlines())
-    test  = set((split_dir / "test.txt").read_text().splitlines())
+    val = set((split_dir / "val.txt").read_text().splitlines())
+    test = set((split_dir / "test.txt").read_text().splitlines())
 
-    assert train.isdisjoint(val),  "Train/Val overlap detected"
+    assert train.isdisjoint(val), "Train/Val overlap detected"
     assert train.isdisjoint(test), "Train/Test overlap detected"
-    assert val.isdisjoint(test),   "Val/Test overlap detected"
+    assert val.isdisjoint(test), "Val/Test overlap detected"
 
-    for split in split_dir.glob('*.txt'):
-        logger.info(f'Checkinng split {split.stem}')
+    for split in split_dir.glob("*.txt"):
+        logger.info(f"Checkinng split {split.stem}")
 
         kept = []
 
-        with open(split, 'r') as f:
+        with open(split, "r") as f:
             filenames = f.read().splitlines()
 
         for filename in tqdm(filenames, desc=split.name):
@@ -144,8 +167,7 @@ def validate_data(raw_data_dir: Path, interim_data_dir: Path) -> None:
             if not _to_discard_data(filename, data_path):
                 kept.append(filename)
 
-
         out_path = out_dir / split.name
-        out_path.write_text('\n'.join(kept) + '\n')
+        out_path.write_text("\n".join(kept) + "\n")
 
         logger.info(f"{split.name}: kept {len(kept)} / {len(filenames)}")

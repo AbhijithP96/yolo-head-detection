@@ -19,19 +19,19 @@ PROJ_ROOT = Path(__file__).resolve().parents[1]
 
 # Load parameters from params.yaml configuration file
 params_path = PROJ_ROOT / "params.yaml"
-with open(params_path, 'r') as f:
+with open(params_path, "r") as f:
     params = yaml.safe_load(f)
 
 # Load download URL and MLFlow tracking URI from environment variables or params.yaml
 try:
-    URL = os.environ['URL']
-    TRACKING_URI = os.environ['TRACKING_URI']
+    URL = os.environ["URL"]
+    TRACKING_URI = os.environ["TRACKING_URI"]
 except KeyError:
     # Fallback to params.yaml if environment variables are not set
-    URL = params.get('url', '')
-    TRACKING_URI = params.get('tracking_uri', 'http://localhost:5000')
+    URL = params.get("url", "")
+    TRACKING_URI = params.get("tracking_uri", "http://localhost:5000")
 
-logger.info(f'Download URL: {URL}')
+logger.info(f"Download URL: {URL}")
 
 # Define project directory structure
 logger.info(f"PROJ_ROOT path is: {PROJ_ROOT}")
@@ -63,11 +63,11 @@ except ModuleNotFoundError:
 
 class Trainer:
     """Configuration class for training parameters.
-    
+
     This class encapsulates all hyperparameters and settings needed for training
     the YOLO model, including optimizer settings, data augmentation parameters,
     and learning rate configuration.
-    
+
     Attributes:
         exp (str): Experiment name for tracking.
         run (str): Run name for this specific training run.
@@ -80,31 +80,32 @@ class Trainer:
         lr0 (float): Initial learning rate.
         cutmix (float): Cutmix augmentation probability (0.0 to 1.0).
     """
-    
+
     def __init__(self, training_param_dict):
         """Initialize trainer with parameters from a dictionary.
-        
+
         Args:
             training_param_dict (dict): Dictionary containing training parameters
                 loaded from params.yaml.
         """
-        self.exp = training_param_dict.get('exp', 'Default-exp')
-        self.run = training_param_dict.get('run', 'default-run')
-        self.model = training_param_dict.get('model', 'yolov8n.pt')
-        self.optimizer = training_param_dict.get('optimizer', 'SGD')
-        
+        self.exp = training_param_dict.get("exp", "Default-exp")
+        self.run = training_param_dict.get("run", "default-run")
+        self.model = training_param_dict.get("model", "yolov8n.pt")
+        self.optimizer = training_param_dict.get("optimizer", "SGD")
+
         # Handle batch size - if value >= 1, convert to int; otherwise treat as fraction
-        batch = float(training_param_dict.get('batch', 16))
+        batch = float(training_param_dict.get("batch", 16))
         self.batch = batch if batch < 1 else int(batch)
-        
-        self.epochs = int(training_param_dict.get('epochs', 30))
-        self.patience = int(training_param_dict.get('patience', 5))
-        
+
+        self.epochs = int(training_param_dict.get("epochs", 30))
+        self.patience = int(training_param_dict.get("patience", 5))
+
         # Data augmentation parameters
-        self.scale = float(training_param_dict.get('scale', 0.8))
-        self.mosaic = float(training_param_dict.get('mosaic', 1.0))
-        self.lr0 = float(training_param_dict.get('lr0', 0.01))
-        self.cutmix = float(training_param_dict.get('cutmix', 0.0))
-        
+        self.scale = float(training_param_dict.get("scale", 0.8))
+        self.mosaic = float(training_param_dict.get("mosaic", 1.0))
+        self.lr0 = float(training_param_dict.get("lr0", 0.01))
+        self.cutmix = float(training_param_dict.get("cutmix", 0.0))
+
+
 # Initialize trainer with parameters from params.yaml
-TRAINER = Trainer(params['training'])
+TRAINER = Trainer(params["training"])

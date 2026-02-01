@@ -6,3 +6,5 @@ opencv-python
 ultralytics
 dagshub
 mlflow
+pytest
+dvc
