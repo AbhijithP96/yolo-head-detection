@@ -4,7 +4,12 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 import yaml
 
-from yolo_head_detection.data_utils.voc2yolo import _convert_box, _read_and_convert_xml, _create_yaml_file
+from yolo_head_detection.data_utils.voc2yolo import (
+    _convert_box,
+    _read_and_convert_xml,
+    _create_yaml_file,
+)
+
 
 ##-------------------------------------------------------------
 # Helper Functions for Tests
@@ -13,6 +18,7 @@ def write_xml(tmp_path: Path, content: str) -> Path:
     file = tmp_path / "test.xml"
     file.write_text(content)
     return file
+
 
 ##-------------------------------------------------------------
 # Tests for _convert_box function in voc2yolo.py
@@ -25,8 +31,8 @@ def test_basic_box_conversion():
     class_id, x, y, bw, bh = _convert_box(bbox, w, h)
 
     assert class_id == 0
-    assert x == pytest.approx(0.2)   # center x = 20 / 100
-    assert y == pytest.approx(0.4)   # center y = 40 / 100
+    assert x == pytest.approx(0.2)  # center x = 20 / 100
+    assert y == pytest.approx(0.4)  # center y = 40 / 100
     assert bw == pytest.approx(0.2)  # width = 20 / 100
     assert bh == pytest.approx(0.4)  # height = 40 / 100
 
@@ -80,9 +86,11 @@ def test_non_square_image():
     assert bw == pytest.approx(0.5)
     assert bh == pytest.approx(0.5)
 
+
 ##-------------------------------------------------------------
 # Tests for _read_and_convert_xml function in voc2yolo.py
 ##-------------------------------------------------------------
+
 
 def test_single_object_conversion(tmp_path):
     """Single bounding box should be converted correctly."""
@@ -107,10 +115,10 @@ def test_single_object_conversion(tmp_path):
     cls, x, y, w, h = boxes[0]
 
     assert cls == 0
-    assert x == pytest.approx(0.20)   # (10+30)/2 / 100
-    assert y == pytest.approx(0.20)   # (20+60)/2 / 200
-    assert w == pytest.approx(0.20)   # (30-10)/100
-    assert h == pytest.approx(0.20)   # (60-20)/200
+    assert x == pytest.approx(0.20)  # (10+30)/2 / 100
+    assert y == pytest.approx(0.20)  # (20+60)/2 / 200
+    assert w == pytest.approx(0.20)  # (30-10)/100
+    assert h == pytest.approx(0.20)  # (60-20)/200
 
 
 def test_multiple_objects(tmp_path):
@@ -172,9 +180,11 @@ def test_missing_size_tag(tmp_path):
     with pytest.raises(Exception):
         _read_and_convert_xml(xml_file)
 
+
 ##-------------------------------------------------------------
 # Tests for _create_yaml_file function in voc2yolo.py
 ##-------------------------------------------------------------
+
 
 def test_create_yaml_file(tmp_path):
     """YAML file should be created with correct content."""
@@ -190,9 +200,9 @@ def test_create_yaml_file(tmp_path):
     with open(yaml_file, "r") as f:
         content = yaml.safe_load(f)
 
-    assert content['path'] == str(out_dir)
-    assert content['train'] == "images/train"
-    assert content['val'] == "images/val"   
-    assert content['test'] == "images/test"
-    assert len(content['names'].keys()) == 1
-    assert content['names'][0] == "head"
+    assert content["path"] == str(out_dir)
+    assert content["train"] == "images/train"
+    assert content["val"] == "images/val"
+    assert content["test"] == "images/test"
+    assert len(content["names"].keys()) == 1
+    assert content["names"][0] == "head"

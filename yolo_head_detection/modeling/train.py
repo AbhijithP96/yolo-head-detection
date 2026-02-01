@@ -89,9 +89,7 @@ def main():
 
         logger.info("Setting up MLFlow Tracking on Dagshub")
         if repo_owner and repo_name:
-            dagshub.init(
-                repo_owner=repo_owner, repo_name=repo_name, mlflow=True
-            )
+            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
         mlflow.set_tracking_uri(TRACKING_URI)
         mlflow.set_experiment(TRAINER.exp)
 

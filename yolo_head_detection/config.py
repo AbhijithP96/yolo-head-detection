@@ -12,9 +12,9 @@ from dotenv import load_dotenv
 from loguru import logger
 
 import dagshub
-from dagshub.auth import add_app_token,clear_token_cache
+from dagshub.auth import add_app_token, clear_token_cache
 
-clear_token_cache()
+# clear_token_cache()
 # Load environment variables from .env file if it exists
 load_dotenv()
 
@@ -32,7 +32,7 @@ try:
 except KeyError:
     # Fallback to params.yaml if environment variables are not set
     URL = params.get("url", "")
-    
+
 # Setup DagsHub repository information for MLFlow tracking
 # check if dagshub access token is set in environment variables
 
@@ -44,12 +44,14 @@ try:
     except Exception:
         logger.error("DAGSHUB_ACCESS_TOKEN is not set or invalid.")
 except KeyError:
-    logger.warning("DAGSHUB_ACCESS_TOKEN is not set. Only for local tracking. Not reproducible in CI/CD.")
+    logger.warning(
+        "DAGSHUB_ACCESS_TOKEN is not set. Only for local tracking. Not reproducible in CI/CD."
+    )
     logger.warning("Will use browser authentication if required.")
 
 
-repo_owner = params.get("repo_owner", None)
-repo_name = params.get("repo_name", None)
+repo_owner = os.environ.get("DAGSHUB_REPO_OWNER", params.get("repo_owner", None))
+repo_name = os.environ.get("DAGSHUB_REPO_NAME", params.get("repo_name", None))
 if repo_owner and repo_name:
     try:
         dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
