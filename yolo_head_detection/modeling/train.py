@@ -22,7 +22,7 @@ from yolo_head_detection.config import (
     TRAINER,
     TRACKING_URI,
     REPORTS_DIR,
-    TRACK
+    TRACK,
 )
 
 app = typer.Typer()
@@ -85,7 +85,7 @@ def main():
     """
     if not TRACK:
         raise NotImplementedError("Training without MLFlow not implemented")
-    
+
     try:
         logger.info("Setting up MLFlow Tracking on Dagshub")
         mlflow.set_tracking_uri(TRACKING_URI)
