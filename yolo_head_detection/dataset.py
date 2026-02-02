@@ -10,7 +10,7 @@ from config import (
     EXTERNAL_DATA_DIR,
     URL,
 )
-from data_utils import collect_data, validate_data, convert_voc_to_yolo
+from data_utils import collect_data, convert_voc_to_yolo, validate_data
 
 app = typer.Typer()
 

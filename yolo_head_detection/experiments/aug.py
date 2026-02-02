@@ -63,18 +63,14 @@ def main():
     mlflow.set_experiment("augmentations")
 
     try:
-
         with mlflow.start_run(run_name="yolov8n-aug-search"):
-
             logger.info("Experiment Started")
 
             for mosaic in mosaics:
                 for scale in scales:
-
                     run_name = f"run_mosaic:{mosaic}_scale:{scale}"
                     logger.info(f"Starting run:{run_name}")
                     with mlflow.start_run(nested=True, run_name=run_name):
-
                         # Reinitialize model for each run to start fresh
                         model = YOLO(model=MODELS_DIR / "yolov8n.pt")
                         logger.info("Model Yolov8n reinitialized for this run")

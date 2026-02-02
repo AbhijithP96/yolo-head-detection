@@ -6,12 +6,12 @@ stages:
     deps:
     - path: yolo_head_detection/data_utils/data_collection.py
       hash: md5
-      md5: bc83a855f590236a4398e8404baf5021
-      size: 8174
+      md5: e6fc323e41a1d6c09393e4682b6b8ce4
+      size: 10492
     - path: yolo_head_detection/dataset.py
       hash: md5
-      md5: 7ca5b81e4872e67e6446dc0c7a733f9d
-      size: 1079
+      md5: b59da79738b58986cb4050b16175219f
+      size: 1082
     params:
       params.yaml:
         url: 
@@ -19,5 +19,55 @@ stages:
     outs:
     - path: data/raw/HollywoodHeads
       hash: md5
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
+      size: 5802977531
+      nfiles: 449490
+  data_validation:
+    cmd: python yolo_head_detection/dataset.py validate
+    deps:
+    - path: data/raw/HollywoodHeads
+      hash: md5
+      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
+      size: 5802977531
+      nfiles: 449490
+    - path: yolo_head_detection/data_utils/data_validation.py
+      hash: md5
+      md5: 2f863aaec80752e7266bcd4ab504bdc2
+      size: 4815
+    - path: yolo_head_detection/dataset.py
+      hash: md5
+      md5: b59da79738b58986cb4050b16175219f
+      size: 1082
+    outs:
+    - path: data/interim
+      hash: md5
+      md5: 60215423a389e33638a6eaa6740742ca.dir
+      size: 3367770
+      nfiles: 3
+  voc2yolo:
+    cmd: python yolo_head_detection/dataset.py convert
+    deps:
+    - path: data/interim
+      hash: md5
+      md5: 60215423a389e33638a6eaa6740742ca.dir
+      size: 3367770
+      nfiles: 3
+    - path: data/raw/HollywoodHeads
+      hash: md5
+      md5: 2f4d5972a659d1a2edb7c975d48dfe30.dir
+      size: 5802977531
+      nfiles: 449490
+    - path: yolo_head_detection/data_utils/voc2yolo.py
+      hash: md5
+      md5: 2012d1388e4129b86f784db271fbbc15
+      size: 4922
+    - path: yolo_head_detection/dataset.py
+      hash: md5
+      md5: b59da79738b58986cb4050b16175219f
+      size: 1082
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 6048033f7897cf7ea022f543bbf268d8.dir
+      size: 5679526640
+      nfiles: 449037

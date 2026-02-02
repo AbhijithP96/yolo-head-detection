@@ -140,7 +140,6 @@ def _create_split(data_dir: Path):
             )
 
         else:
-
             # If a path exists but is not a directory, remove it so we can
             # create the expected directory structure.
             if SPLIT_DIR.exists() and not SPLIT_DIR.is_dir():

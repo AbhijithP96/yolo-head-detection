@@ -26,7 +26,7 @@ stages:
     outs:
     - data/processed
   train:
-    cmd: python yolo_head_detection/modeling/train.py main
+    cmd: python yolo_head_detection/modeling/train.py
     deps:
     - yolo_head_detection/modeling/train.py
     - yolo_head_detection/config.py
@@ -34,14 +34,14 @@ stages:
     outs:
     - reports/run_info.json
   register:
-    cmd: python yolo_head_detection/modeling/register.py main
+    cmd: python yolo_head_detection/modeling/register.py
     deps:
       - yolo_head_detection/modeling/register.py
       - reports/run_info.json
     outs:
       - reports/reg_details.json
   test:
-    cmd: python yolo_head_detection/modeling/test.py main
+    cmd: python yolo_head_detection/modeling/test.py
     deps:
       - yolo_head_detection/modeling/test.py
       - reports/reg_details.json

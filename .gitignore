@@ -207,3 +207,6 @@ reports/yolo8n-log-check
 reports/yolo8n-log-check-2
 reports/yolov8n-head-detection
 reports/test
+reports/reg_details.json
+reports/run_info.json
+reports/test_results.json

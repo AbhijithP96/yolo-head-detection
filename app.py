@@ -1,11 +1,11 @@
 import uvicorn
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, WebSocket
 import io
 from PIL import Image
 import numpy as np
 from contextlib import asynccontextmanager
 
-from utils import load_model
+from utils import load_model, get_feat_maps
 
 models = {}
 
@@ -59,5 +59,35 @@ async def predict(file: UploadFile = File(...)) -> dict:
     return {"success": True, "predictions": predictions}
 
 
+@app.post("/features/file")
+async def extract_features(file: UploadFile = File(...)) -> dict:
+    """
+    Extract features from the uploaded image using the YOLO head detection model.
+
+    Args:
+        file (UploadFile): The image file uploaded by the user.
+    Returns:
+        dict: A dictionary containing extracted features.
+    """
+    contents = await file.read()
+    image = Image.open(io.BytesIO(contents)).resize((640, 640))
+    image_np = np.array(image)
+
+    model = models.get("yolo_head_detector")
+    if model is None:
+        return {"success": False, "error": "Model not loaded."}
+
+    try:
+        features = get_feat_maps(model, image_np)
+
+        if features:
+            return {"success": True, "features": features}
+        else:
+            return {"success": False, "error": "Invalid output"}
+
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 if __name__ == "__main__":
-    uvicorn.run(app)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

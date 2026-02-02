@@ -31,21 +31,21 @@ def test_basic_box_conversion():
     class_id, x, y, bw, bh = _convert_box(bbox, w, h)
 
     assert class_id == 0
-    assert x == pytest.approx(0.2)  # center x = 20 / 100
-    assert y == pytest.approx(0.4)  # center y = 40 / 100
+    assert x == pytest.approx(0.19)  # center x = 19 / 100
+    assert y == pytest.approx(0.39)  # center y = 39 / 100
     assert bw == pytest.approx(0.2)  # width = 20 / 100
     assert bh == pytest.approx(0.4)  # height = 40 / 100
 
 
 def test_full_image_box():
-    """Box covering entire image should return center 0.5,0.5 and size 1,1."""
+    """Box covering entire image should return center 0.49,0.49 and size 1,1."""
     bbox = [0, 200, 0, 100]
     w, h = 200, 100
 
     _, x, y, bw, bh = _convert_box(bbox, w, h)
 
-    assert x == pytest.approx(0.5)
-    assert y == pytest.approx(0.5)
+    assert x == pytest.approx(99 / 200)
+    assert y == pytest.approx(49 / 100)
     assert bw == pytest.approx(1.0)
     assert bh == pytest.approx(1.0)
 
@@ -81,8 +81,8 @@ def test_non_square_image():
 
     _, x, y, bw, bh = _convert_box(bbox, w, h)
 
-    assert x == pytest.approx(0.5)
-    assert y == pytest.approx(0.5)
+    assert x == pytest.approx(99 / 200)
+    assert y == pytest.approx(49 / 100)
     assert bw == pytest.approx(0.5)
     assert bh == pytest.approx(0.5)
 
@@ -115,8 +115,8 @@ def test_single_object_conversion(tmp_path):
     cls, x, y, w, h = boxes[0]
 
     assert cls == 0
-    assert x == pytest.approx(0.20)  # (10+30)/2 / 100
-    assert y == pytest.approx(0.20)  # (20+60)/2 / 200
+    assert x == pytest.approx(0.19)  # (10+30)/2 -1 / 100
+    assert y == pytest.approx(39 / 200)  # (20+60)/2 -1 / 200
     assert w == pytest.approx(0.20)  # (30-10)/100
     assert h == pytest.approx(0.20)  # (60-20)/200
 
@@ -140,8 +140,8 @@ def test_multiple_objects(tmp_path):
     boxes = _read_and_convert_xml(xml_file)
 
     assert len(boxes) == 2
-    assert boxes[0][1:] == pytest.approx((0.25, 0.25, 0.5, 0.5))
-    assert boxes[1][1:] == pytest.approx((0.75, 0.75, 0.5, 0.5))
+    assert boxes[0][1:] == pytest.approx((0.24, 0.24, 0.5, 0.5))
+    assert boxes[1][1:] == pytest.approx((0.74, 0.74, 0.5, 0.5))
 
 
 def test_no_objects(tmp_path):

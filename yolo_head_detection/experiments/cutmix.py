@@ -24,7 +24,6 @@ app = typer.Typer()
 
 @app.command()
 def main():
-
     cutmix = [1.0]
 
     logger.info("Setting MLFlow Tracking for Augmentation(CutMix) Search")
@@ -33,17 +32,13 @@ def main():
     mlflow.set_experiment("cutmix")
 
     try:
-
         with mlflow.start_run(run_name="yolov8n-cutmix-search"):
-
             logger.info("Experiment Started")
 
             for ctmix in cutmix:
-
                 run_name = f"run_cutmix:{ctmix}"
                 logger.info(f"Starting run:{run_name}")
                 with mlflow.start_run(nested=True, run_name=run_name):
-
                     # Reinitialize model for each run to start fresh
                     model = YOLO(model=MODELS_DIR / "yolov8n.pt")
                     logger.info("Model Yolov8n reinitialized for this run")

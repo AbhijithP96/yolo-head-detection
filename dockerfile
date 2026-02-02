@@ -6,6 +6,11 @@ WORKDIR /app
 # Copy requirements file
 COPY docker_req.txt /app/
 
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install dependencies
 RUN pip install --no-cache-dir -r docker_req.txt
 
@@ -28,4 +33,4 @@ COPY utils.py /app/
 EXPOSE 8000
 
 # Command to run the application
-CMD ["python", "app.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

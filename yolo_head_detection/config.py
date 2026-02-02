@@ -83,6 +83,19 @@ MODELS_DIR = PROJ_ROOT / "models"
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
+# create directories if they do not exist
+for directory in [
+    DATA_DIR,
+    RAW_DATA_DIR,
+    INTERIM_DATA_DIR,
+    PROCESSED_DATA_DIR,
+    EXTERNAL_DATA_DIR,
+    MODELS_DIR,
+    REPORTS_DIR,
+    FIGURES_DIR,
+]:
+    directory.mkdir(parents=True, exist_ok=True)
+
 # If tqdm is installed, configure loguru to output through tqdm.write
 # This ensures log messages don't interfere with tqdm progress bars
 # Reference: https://github.com/Delgan/loguru/issues/135
