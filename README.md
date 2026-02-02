@@ -107,7 +107,7 @@ This repository logs experiments using MLflow and optionally pushes tracking dat
 
 Key points:
 
-- `yolo_head_detection/config.py` configures MLflow tracking URI. If `DAGSHUB_REPO_OWNER` and `DAGSHUB_REPO_NAME` are available, the tracking URI is set to DagsHub's MLflow endpoint.
+- `yolo_head_detection/config.py` configures MLflow tracking URI. If `DAGSHUB_ACCESS_TOKEN` is available, the tracking URI is set to DagsHub's MLflow endpoint.
 - `yolo_head_detection/modeling/train.py` logs training runs and the final model to MLflow.
 - `yolo_head_detection/experiments/train_params.py` performs a hyperparameter grid search and logs nested MLflow runs for each trial.
 
@@ -162,7 +162,7 @@ Below is an example GitHub Actions workflow you can add at `.github/workflows/ci
 
 You can change the workflow as needed and use the image name from `.github/workflows/ci_cd.yml` to deploy the API to cloud services.
 
-Secrets to configure while deploying:
+Secrets to configure while deploying if using your own DagsHub repo:
 
 - `DAGSHUB_ACCESS_TOKEN` - allows reading from Dagshub model registry.
 - `DAGSHUB_REPO_OWNER` and `DAGSHUB_REPO_NAME` - repository identification.
