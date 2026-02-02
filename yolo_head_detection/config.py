@@ -35,35 +35,40 @@ except KeyError:
 
 # Setup DagsHub repository information for MLFlow tracking
 # check if dagshub access token is set in environment variables
-
+DAGSHUB_ACCESS_TOKEN = None
 try:
     DAGSHUB_ACCESS_TOKEN = os.environ["DAGSHUB_ACCESS_TOKEN"]
 
     try:
         add_app_token(DAGSHUB_ACCESS_TOKEN)
     except Exception:
+        DAGSHUB_ACCESS_TOKEN = None
         logger.error("DAGSHUB_ACCESS_TOKEN is not set or invalid.")
 except KeyError:
     logger.warning(
         "DAGSHUB_ACCESS_TOKEN is not set. Only for local tracking. Not reproducible in CI/CD."
     )
-    logger.warning("Will use browser authentication if required.")
 
 
-repo_owner = os.environ.get("DAGSHUB_REPO_OWNER", params.get("repo_owner", None))
-repo_name = os.environ.get("DAGSHUB_REPO_NAME", params.get("repo_name", None))
-if repo_owner and repo_name:
-    try:
-        dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
-        TRACKING_URI = f"https://dagshub.com/{repo_owner}/{repo_name}.mlflow"
-        logger.info(f"Logging to DagsHub MLFlow tracking server at {TRACKING_URI}.")
-    except Exception as e:
-        logger.error(f"Failed to initialize DagsHub: {e}")
-        logger.warning("Logging to local MLFlow tracking server.")
-        TRACKING_URI = "http://localhost:5000"
-else:
-    logger.info("Logging to local MLFlow tracking server.")
+repo_owner = os.environ.get("DAGSHUB_REPO_OWNER", params.get("repo_owner", "AbhijithP96"))
+repo_name = os.environ.get("DAGSHUB_REPO_NAME", params.get("repo_name", "yolo-head-detection"))
+local = os.environ.get("LOCAL_TRACKING", params.get("local_tracking", False))
+TRACKING_URI = f"https://dagshub.com/{repo_owner}/{repo_name}.mlflow"
+TRACK = True
+
+if DAGSHUB_ACCESS_TOKEN:
+    dagshub.init(repo_name=repo_name, repo_owner=repo_owner, mlflow=True)
+    logger.info(f'Dagshub connected, training runs will be logged to Dagshub at {TRACKING_URI}')
+    
+elif local:
     TRACKING_URI = "http://localhost:5000"
+    logger.info(f"Local Tracking enabled, mlflow will track runs at {TRACKING_URI}")
+    
+else:
+    TRACK = False
+    logger.warning("Training and experiments won't be logged/tracked by MLFlow")
+    logger.info(f"Will use latest model version at {TRACKING_URI} unless specified.")
+    
 
 logger.info(f"Download URL: {URL}")
 

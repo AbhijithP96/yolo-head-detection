@@ -22,8 +22,7 @@ from yolo_head_detection.config import (
     TRAINER,
     TRACKING_URI,
     REPORTS_DIR,
-    repo_owner,
-    repo_name,
+    TRACK
 )
 
 app = typer.Typer()
@@ -84,10 +83,11 @@ def main():
     Raises:
         RuntimeError: If any error occurs during training.
     """
+    if not TRACK:
+        raise NotImplementedError("Training without MLFlow not implemented")
+    
     try:
         logger.info("Setting up MLFlow Tracking on Dagshub")
-        if repo_owner and repo_name:
-            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
         mlflow.set_tracking_uri(TRACKING_URI)
         mlflow.set_experiment(TRAINER.exp)
 

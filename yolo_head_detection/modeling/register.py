@@ -20,7 +20,7 @@ root_path = Path(__file__).resolve().parents[2]  # Navigate up 2 levels to proje
 sys.path.append(str(root_path))
 
 from ultralytics import YOLO
-from yolo_head_detection.config import TRACKING_URI, REPORTS_DIR, repo_owner, repo_name
+from yolo_head_detection.config import TRACKING_URI, REPORTS_DIR, TRACK
 
 # Initialize Typer application for CLI
 app = Typer()
@@ -40,12 +40,12 @@ def main():
     Raises:
         RuntimeError: If any error occurs during the model registration process.
     """
+    if not TRACK:
+        logger.warning(f"Using Model Registry at {TRACKING_URI}")
 
     try:
         # Initialize DagsHub integration with MLflow for remote tracking
-        logger.info("Setting up MLFlow Tracking on Dagshub")
-        if repo_owner and repo_name:
-            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
+        logger.info("Setting up connection to Model Registry")
         mlflow.set_tracking_uri(TRACKING_URI)
 
         # Load the training run metadata containing model URI and other run information
