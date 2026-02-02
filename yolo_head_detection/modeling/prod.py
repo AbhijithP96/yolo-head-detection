@@ -29,7 +29,6 @@ app = Typer()
 
 @app.command()
 def main():
-    
     if not TRACK:
         logger.warning(f"Using model registry at {TRACKING_URI}")
     try:

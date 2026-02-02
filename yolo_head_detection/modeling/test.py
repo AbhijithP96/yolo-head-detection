@@ -24,7 +24,7 @@ from yolo_head_detection.config import (
     TRACKING_URI,
     PROCESSED_DATA_DIR,
     REPORTS_DIR,
-    TRACK
+    TRACK,
 )
 
 # Initialize Typer CLI application

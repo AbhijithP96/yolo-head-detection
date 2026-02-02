@@ -50,25 +50,31 @@ except KeyError:
     )
 
 
-repo_owner = os.environ.get("DAGSHUB_REPO_OWNER", params.get("repo_owner", "AbhijithP96"))
-repo_name = os.environ.get("DAGSHUB_REPO_NAME", params.get("repo_name", "yolo-head-detection"))
+repo_owner = os.environ.get(
+    "DAGSHUB_REPO_OWNER", params.get("repo_owner", "AbhijithP96")
+)
+repo_name = os.environ.get(
+    "DAGSHUB_REPO_NAME", params.get("repo_name", "yolo-head-detection")
+)
 local = os.environ.get("LOCAL_TRACKING", params.get("local_tracking", False))
 TRACKING_URI = f"https://dagshub.com/{repo_owner}/{repo_name}.mlflow"
 TRACK = True
 
 if DAGSHUB_ACCESS_TOKEN:
     dagshub.init(repo_name=repo_name, repo_owner=repo_owner, mlflow=True)
-    logger.info(f'Dagshub connected, training runs will be logged to Dagshub at {TRACKING_URI}')
-    
+    logger.info(
+        f"Dagshub connected, training runs will be logged to Dagshub at {TRACKING_URI}"
+    )
+
 elif local:
     TRACKING_URI = "http://localhost:5000"
     logger.info(f"Local Tracking enabled, mlflow will track runs at {TRACKING_URI}")
-    
+
 else:
     TRACK = False
     logger.warning("Training and experiments won't be logged/tracked by MLFlow")
     logger.info(f"Will use latest model version at {TRACKING_URI} unless specified.")
-    
+
 
 logger.info(f"Download URL: {URL}")
 
