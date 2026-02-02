@@ -167,7 +167,7 @@ def test_discard_if_bbox_too_small(tmp_path):
     create_xml(
         data_path / "Annotations" / "img1.xml",
         "img1",
-        boxes=[(10, 10, 15, 15)],  # 5x5 < MIN_W/H=10
+        boxes=[(10, 10, 12, 12)],  # 2x2 < MIN_W/H=5
     )
 
     assert _to_discard_data("img1", data_path) is True

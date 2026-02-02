@@ -11,3 +11,4 @@ dvc
 fastapi
 uvicorn
 python-multipart
+lark

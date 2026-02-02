@@ -6,6 +6,7 @@ import json
 import typer
 import numpy as np
 from PIL import Image
+import os
 
 import sys
 from pathlib import Path
@@ -41,7 +42,9 @@ class YoloMlFlowModel(mlflow.pyfunc.PythonModel):
         Args:
             context: MLFlow context containing model artifacts.
         """
-        self.model = YOLO(context.artifacts["yolo_model"])
+        raw_path = context.artifacts["yolo_model"]
+        safe_path = Path(raw_path.replace("\\", os.sep)).resolve()
+        self.model = YOLO(str(safe_path))
 
     def predict(self, context, model_input):
         """Run predictions on input images.
@@ -56,11 +59,7 @@ class YoloMlFlowModel(mlflow.pyfunc.PythonModel):
         model_input = [img for img in model_input]
         results = self.model(model_input)
         # Collect boxes for all results
-        outputs = [
-            (r.boxes.xyxy.cpu().numpy(), r.probs.cpu().numpy())
-            for r in results
-            if r.boxes is not None
-        ]
+        outputs = [r.boxes.xyxy.cpu().numpy() for r in results if r.boxes is not None]
         return outputs
 
     def get_raw_model(self):
@@ -86,7 +85,6 @@ def main():
         RuntimeError: If any error occurs during training.
     """
     try:
-
         logger.info("Setting up MLFlow Tracking on Dagshub")
         if repo_owner and repo_name:
             dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
@@ -117,7 +115,7 @@ def main():
                 cutmix=TRAINER.cutmix,
                 optimizer=TRAINER.optimizer,
                 lr0=TRAINER.lr0,
-                fraction=1.0,
+                fraction=0.1,
                 workers=4,
             )
 
@@ -132,7 +130,7 @@ def main():
 
             batch_input = np.expand_dims(model_input, axis=0)  # shape: (1, H, W, C)
             batch_output = [
-                (r.boxes.xyxy.cpu().numpy(), r.probs.cpu().numpy())
+                r.boxes.xyxy.cpu().numpy()
                 for r in final_model([img for img in batch_input])
                 if r.boxes is not None
             ]
@@ -144,7 +142,7 @@ def main():
             model_info = mlflow.pyfunc.log_model(
                 name="yolo_head_detection",
                 python_model=YoloMlFlowModel(),
-                artifacts={"yolo_model": str(weights_path)},
+                artifacts={"yolo_model": weights_path.as_posix()},
                 signature=model_signature,
                 input_example=batch_input,
             )

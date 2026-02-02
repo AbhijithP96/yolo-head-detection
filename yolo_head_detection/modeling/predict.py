@@ -10,12 +10,11 @@ import cv2
 import numpy as np
 
 app = typer.Typer()
-inference_url = "http://127.0.0.1:8000/predict/file"
+inference_url = "http://0.0.0.0:8000/predict/file"
 
 
 @app.command()
 def main(image_path: str):
-
     img = Image.open(image_path).convert("RGB")
     img_np = np.array(img)
     buffered = BytesIO()
@@ -75,6 +74,31 @@ def camera():
 
     cap.release()
     cv2.destroyAllWindows()
+
+
+@app.command()
+def features(image_path: str):
+    url = inference_url.replace("/predict/file", "/features/file")
+    img = Image.open(image_path).convert("RGB")
+    img_np = np.array(img)
+    buffered = BytesIO()
+    img.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    files = {"file": (Path(image_path).name, base64.b64decode(img_str), "image/jpeg")}
+    response = requests.post(url, files=files)
+
+    if response.status_code == 200:
+        output = response.json()
+        if output["success"]:
+            features = output["features"]
+
+            for k, v in features.items():
+                print(k, "shape: ", v["shape"])
+
+        else:
+            print("Error in prediction:", output["error"])
+    else:
+        print(f"Request failed with status code {response.status_code}")
 
 
 if __name__ == "__main__":

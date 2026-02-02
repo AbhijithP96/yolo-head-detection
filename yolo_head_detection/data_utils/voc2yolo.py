@@ -20,8 +20,8 @@ def _convert_box(bbox, w, h):
         tuple: (class_id, x_center, y_center, width, height) normalized to [0,1].
     """
     dw, dh = 1.0 / w, 1.0 / h
-    x = (bbox[0] + bbox[1]) / 2.0
-    y = (bbox[2] + bbox[3]) / 2.0
+    x = (bbox[0] + bbox[1]) / 2.0 - 1
+    y = (bbox[2] + bbox[3]) / 2.0 - 1
     bw = bbox[1] - bbox[0]
     bh = bbox[3] - bbox[2]
 
@@ -58,10 +58,10 @@ def _read_and_convert_xml(file: Path) -> List[Tuple[int, float, float, float, fl
     for obj in objects:
         bndbox = obj.find("bndbox")
 
-        xmin = int(bndbox.findtext("xmin"))
-        ymin = int(bndbox.findtext("ymin"))
-        xmax = int(bndbox.findtext("xmax"))
-        ymax = int(bndbox.findtext("ymax"))
+        xmin = float(bndbox.findtext("xmin"))
+        ymin = float(bndbox.findtext("ymin"))
+        xmax = float(bndbox.findtext("xmax"))
+        ymax = float(bndbox.findtext("ymax"))
 
         bbox_yolo = _convert_box([xmin, xmax, ymin, ymax], width, height)
         bbox_list.append(bbox_yolo)

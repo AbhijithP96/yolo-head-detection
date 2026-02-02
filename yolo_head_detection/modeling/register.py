@@ -72,6 +72,7 @@ def main():
             name=reg_model.name,
             version=reg_model.version,
             stage="staging",
+            archive_existing_versions=True,
         )
         logger.info("Model has been moved to 'staging' stage for further testing.")
 

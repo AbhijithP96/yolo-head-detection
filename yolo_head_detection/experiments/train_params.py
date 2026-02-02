@@ -63,18 +63,14 @@ def main():
     mlflow.set_experiment("training_params")
 
     try:
-
         with mlflow.start_run(run_name="yolov8n-hyper-param-search"):
-
             logger.info("Experiment Started")
 
             for optimizer in optimizers:
                 for lr in lr0:
-
                     run_name = f"run_{optimizer}_{lr}"
                     logger.info(f"Starting run:{run_name}")
                     with mlflow.start_run(nested=True, run_name=run_name):
-
                         # Reinitialize model for each run to start fresh
                         model = YOLO(model=MODELS_DIR / "yolov8n.pt")
                         logger.info("Model Yolov8n reinitialized for this run")

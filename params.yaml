@@ -3,11 +3,11 @@ repo_owner: "AbhijithP96"
 repo_name: "yolo-head-detection"
 
 training:
-  exp: "model-training-win"
-  run: "yolov8n-head-detection"
+  exp: "dvc-pipeline-test"
+  run: "yolov8n-2"
   model: "yolov8n.pt"
   batch: 10
-  epochs: 20
+  epochs: 5
   patience: 3
   optimizer: 'SGD'
   lr0: 0.0001

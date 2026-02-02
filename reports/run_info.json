@@ -1,5 +1,0 @@
-{
-    "run_id": "219a7db5392a465db7c34648b4bb30f3",
-    "model_name": "yolo_head_detection",
-    "model_uri": "models:/m-4d541e3a54e541029971286365137b8a"
-}
