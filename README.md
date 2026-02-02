@@ -139,8 +139,6 @@ Train locally:
 ```bash
 # To run the main training script via Typer-based CLI
 python yolo_head_detection/modeling/train.py
-# or show help
-python yolo_head_detection/modeling/train.py --help
 
 # To run a test/evaluation after training
 python yolo_head_detection/modeling/test.py
