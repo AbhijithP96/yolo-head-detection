@@ -24,8 +24,7 @@ from yolo_head_detection.config import (
     TRACKING_URI,
     PROCESSED_DATA_DIR,
     REPORTS_DIR,
-    repo_owner,
-    repo_name,
+    TRACK
 )
 
 # Initialize Typer CLI application
@@ -47,12 +46,12 @@ def main():
     Raises:
         RuntimeError: If any error occurs during the evaluation process.
     """
+    if not TRACK:
+        raise NotImplementedError("Testing without MLFlow not implemented.")
 
     try:
         # Initialize DagsHub and MLflow tracking for remote experiment management
-        logger.info("Setting up MLflow tracking on DagsHub")
-        if repo_owner and repo_name:
-            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
+        logger.info("Setting up connection to model registry")
         mlflow.set_tracking_uri(TRACKING_URI)
         mlflow.set_experiment(experiment_name="eval_test_set")
         logger.info("MLflow experiment set to eval_test_set")

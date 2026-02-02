@@ -15,7 +15,8 @@ def load_model():
     try:
         # Initialize DagsHub and MLflow tracking
         if repo_owner and repo_name:
-            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
+            pass
+            #dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
         mlflow.set_tracking_uri(TRACKING_URI)
 
         # Load the registered model from production stage

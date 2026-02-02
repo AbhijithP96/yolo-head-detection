@@ -22,18 +22,19 @@ root_path = Path(__file__).resolve().parents[2]  # Navigate up 2 levels to proje
 sys.path.append(str(root_path))
 
 from ultralytics import YOLO
-from yolo_head_detection.config import TRACKING_URI, REPORTS_DIR, repo_owner, repo_name
+from yolo_head_detection.config import TRACKING_URI, REPORTS_DIR, TRACK
 
 app = Typer()
 
 
 @app.command()
 def main():
+    
+    if not TRACK:
+        logger.warning(f"Using model registry at {TRACKING_URI}")
     try:
         # Initialize DagsHub integration with MLflow for remote tracking
         logger.info("Setting up MLFlow Tracking on Dagshub")
-        if repo_owner and repo_name:
-            dagshub.init(repo_owner=repo_owner, repo_name=repo_name, mlflow=True)
         mlflow.set_tracking_uri(TRACKING_URI)
 
         client = mlflow.MlflowClient()

@@ -30,7 +30,7 @@ COPY app.py /app/
 COPY utils.py /app/
 
 # Expose the port the app runs on
-EXPOSE 10000
+EXPOSE 8000
 
 # Command to run the application
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "10000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
