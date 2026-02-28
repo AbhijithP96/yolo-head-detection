@@ -72,7 +72,7 @@ Check `params.yaml` for default training and repo values.
 
 [Head Detection Demo](https://huggingface.co/spaces/abhiWanKenobi/yolo-head-detector)
 
-You can find the gradio app code [here](https://github.com/AbhijithP96/detector-streamlit)
+You can find the gradio app code [here](https://github.com/AbhijithP96/detector-gradio)
 
 ---
 
