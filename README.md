@@ -68,6 +68,13 @@ Environment variables (recommended to set in CI secrets):
 Check `params.yaml` for default training and repo values.
 
 ---
+## Hugging Face Space
+
+[Head Detection Demo](https://huggingface.co/spaces/abhiWanKenobi/yolo-head-detector)
+
+You can find the gradio app code [here](https://github.com/AbhijithP96/detector-streamlit)
+
+---
 
 ## Data & DVC Pipeline 🔁
 
