@@ -36,7 +36,7 @@ This repository contains data ingestion, preprocessing, training, experiment tra
 
 **Key findings:**
 - Only 2.4% mAP@50 drop on 300W-LP despite never training on it
-- DAD-3DHeads scores *higher* than in-distribution — model generalises
+- DAD-3DHeads scores *higher* than in-distribution , model generalises
   robustly to extreme poses, occlusions, and challenging lighting.
 - 300W-LP mAP@50-95 is lower due to crop expansion (boxes expanded
   0.2–0.4 to approximate full-head coverage); mAP@50 remains strong
@@ -321,3 +321,50 @@ Note: if your server runs on a different host/port, edit the `inference_url` var
 - If image previews do not appear when using `predict.py main`, ensure the environment has a GUI (or run inside an environment that supports OpenCV windows) or modify the script to save annotated outputs to disk.
 
 
+## Acknowledgements
+
+### Datasets
+
+- **HollywoodHeads**
+
+```bash
+@inproceedings{vu15heads,
+	author = {Vu, Tuan{-}Hung and Osokin, Anton and Laptev, Ivan},
+	title = {Context-aware {CNNs} for person head detection},
+	booktitle =  {International Conference on Computer Vision (ICCV)},
+	year = {2015}}
+```
+
+- **300W-LP**
+
+```bash
+@article{DBLP:journals/corr/ZhuLLSL15,
+  author    = {Xiangyu Zhu and
+               Zhen Lei and
+               Xiaoming Liu and
+               Hailin Shi and
+               Stan Z. Li},
+  title     = {Face Alignment Across Large Poses: {A} 3D Solution},
+  journal   = {CoRR},
+  volume    = {abs/1511.07212},
+  year      = {2015},
+  url       = {http://arxiv.org/abs/1511.07212},
+  archivePrefix = {arXiv},
+  eprint    = {1511.07212},
+  timestamp = {Mon, 13 Aug 2018 16:48:23 +0200},
+  biburl    = {https://dblp.org/rec/bib/journals/corr/ZhuLLSL15},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+```
+
+- **DAD-3DHeads dataset**
+
+```bash
+@inproceedings{dad3dheads,
+    title={DAD-3DHeads: A Large-scale Dense, Accurate and Diverse Dataset for 3D Head Alignment from a Single Image},
+    author={Martyniuk, Tetiana and Kupyn, Orest and Kurlyak, Yana and Krashenyi, Igor and Matas, Ji\v{r}i and Sharmanska, Viktoriia},
+    booktitle = {Proc. IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},
+    year={2022}
+}
+```
