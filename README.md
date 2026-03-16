@@ -9,17 +9,40 @@ This repository contains data ingestion, preprocessing, training, experiment tra
 
 ---
 
-## Table of Contents
+## Demo
 
-- [Features](#features)
-- [Quickstart](#quickstart)
-- [Data & DVC Pipeline](#data--dvc-pipeline)
-- [Experiments & Tracking (DagsHub / MLflow)](#experiments--tracking-dagshub--mlflow)
-- [Running Training & Hyperparameter Search](#running-training--hyperparameter-search)
-- [GitHub Actions CI/CD](#github-actions-cicd)
-- [Project Structure](#project-structure)
-- [Development & Contributing](#development--contributing)
-- [License](#license)
+![Demo](/reports/figures/hfspace.gif)
+
+---
+## Results
+
+### In-distribution — HollywoodHeads test split
+
+| mAP(50) | mAP50-95 | precision | recall | fitness |
+|---------|----------|-----------|--------|---------|
+|  0.871  |   0.529  |   0.894   |  0.796 |   0.529 |
+
+### Cross-dataset (generalisation)
+
+| Dataset | mAP(50) | mAP50-95 | precision | recall | fitness |
+|---------|---------|----------|-----------|--------|---------|
+| DAD-3D  |  0.937  |   0.535  |   0.892   |  0.892 |   0.535 |
+| 300W-LP |  0.855  |   0.265  |   0.827   |  0.883 |   0.265 |
+
+**Result Visualization**
+
+![results](/reports/figures/test_results.png)
+
+
+**Key findings:**
+- Only 2.4% mAP@50 drop on 300W-LP despite never training on it
+- DAD-3DHeads scores *higher* than in-distribution — model generalises
+  robustly to extreme poses, occlusions, and challenging lighting.
+- 300W-LP mAP@50-95 is lower due to crop expansion (boxes expanded
+  0.2–0.4 to approximate full-head coverage); mAP@50 remains strong
+
+> All evaluations use the same YOLOv8n weights trained exclusively
+> on HollywoodHeads. No fine-tuning on 300W-LP or DAD-3DHeads.
 
 ---
 
