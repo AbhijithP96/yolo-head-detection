@@ -97,6 +97,10 @@ Check `params.yaml` for default training and repo values.
 
 You can find the gradio app code [here](https://github.com/AbhijithP96/detector-gradio)
 
+## Pre-Trained Weights
+
+You can download the model check point from [here](https://huggingface.co/abhiWanKenobi/yolov8n_head_detection)
+
 ---
 
 ## Data & DVC Pipeline 🔁
