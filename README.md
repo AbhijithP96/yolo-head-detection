@@ -320,6 +320,30 @@ Note: if your server runs on a different host/port, edit the `inference_url` var
 
 ---
 
+## Tracking with SORT
+
+Extends the YOLO detector with [SORT](https://github.com/abewley/sort) (Simple Online and Realtime Tracking), Kalman Filter state estimation + Hungarian algorithm assignment, for persistent ID tracking across frames.
+
+### Setup
+
+Clone the [SORT](https://github.com/abewley/sort) repository and install dependencies.
+
+Copy the files from the SORT repository into this project under `sort/`.
+
+### Run
+
+```bash
+python tracker.py
+```
+
+Two windows open side by side:
+- raw YOLO detection with confidence scores
+- SORT tracking with persistent IDs and color-coded trails
+
+Each track is assigned a unique color. The trail shows the trajectory of the bounding box center over the last 30 frames.
+
+**Known limitation:** When a person leaves and re-enters the frame, SORT assigns a new ID (visible as a color change in the trail). This is a fundamental limitation of IoU-only matching. Hence, for further updation,DeepSORT can be used which addresses this limitation via appearance embeddings for identity-aware re-association.
+
 ## Final Notes & Troubleshooting 🔧
 
 - If image previews do not appear when using `predict.py main`, ensure the environment has a GUI (or run inside an environment that supports OpenCV windows) or modify the script to save annotated outputs to disk.
